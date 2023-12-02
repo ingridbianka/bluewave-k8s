@@ -23,6 +23,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bluewave-app-service
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: bluewave.ledoux-bluewave.com
 spec:
   selector:
     app: bluewave-app
@@ -40,7 +42,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: '*'
+  - host: bluewave.ledoux-bluewave.com
     http:
       paths:
       - path: /
