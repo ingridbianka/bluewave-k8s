@@ -1,13 +1,5 @@
 provider "aws" {
   region = var.region
-  # access_key = var.aws_acces_key
-  # secret_key = var.aws_secret_access_key
-
-  # assume_role {
-  #   role_arn     = local.platform_build_role_arn
-  #   session_name = "terraform"
-  #   external_id  = "terraform"
-  # }
 }
 
 provider "kubernetes" {

@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: 'us-east-1'
-  AWS_ACCOUNT_ID: '909632097186'
+  AWS_ACCOUNT_ID: 'xxxxxxxxxxx'
   ECR_REPOSITORY: 'bluewave-app'
   APP_NAME: 'bluewave-app'
   CLUSTER_NAME: 'bluewave-eks-cluster'
@@ -24,13 +24,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Initialize CodeQL
-      #   uses: github/codeql-action/init@v2
-      #   with:
-      #     languages: 'python'  
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'python'  
 
-      # - name: Perform CodeQL Analysis
-      #   uses: github/codeql-action/analyze@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
 
   build:
     needs: code-scan

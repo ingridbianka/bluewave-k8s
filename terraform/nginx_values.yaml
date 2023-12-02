@@ -1,6 +1,6 @@
 controller:
 
-  redirect-http-to-https: true
+  redirect-http-to-https: false
   admissionWebhooks:
     enabled: false
 
@@ -20,7 +20,7 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
       # service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true,deregistration_delay.timeout_seconds=120,stickiness.enabled=true,stickiness.type=source_ip,proxy_protocol_v2.enabled=true,deregistration_delay.connection_termination.enabled=true
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: '40'
-      service.beta.kubernetes.io/aws-load-balancer-name: bluewave-eks-cluster-nlb
+      # service.beta.kubernetes.io/aws-load-balancer-name: bluewave-eks-cluster-nlb
 
 
 

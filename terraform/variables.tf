@@ -19,7 +19,7 @@ variable "environment" {
 variable "aws_account_id" {
   type        = string
   description = "The AWS account ID"
-  default     = "909632097186"
+  default     = "xxxxxxxxxxxx"
   
 }
 

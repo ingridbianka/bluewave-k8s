@@ -12,7 +12,7 @@ resource "helm_release" "rancher" {
     "${file("rancher_values.yaml")}"
   ]
 
-  depends_on = [ helm_release.nginx_ingress_controller]
+  # depends_on = [ helm_release.nginx_ingress_controller]
 
 }
 

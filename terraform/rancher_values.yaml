@@ -28,7 +28,7 @@ debug: false
 restrictedAdmin: false
 
 
-hostname: rancher.observsmart.com
+# hostname: rancher.observsmart.com
 
 
 imagePullSecrets: []
@@ -42,24 +42,24 @@ ingress:
   servicePort: 80
 
 
-  tls:
-    # options: rancher, letsEncrypt, secret
-    # source: rancher
-    source: secret
-    secretName: tls-rancher-ingress
+  # tls:
+  #   # options: rancher, letsEncrypt, secret
+  #   # source: rancher
+  #   source: secret
+  #   secretName: tls-rancher-ingress
 
 ### LetsEncrypt config ###
 # ProTip: The production environment only allows you to register a name 5 times a week.
 #         Use staging until you have your config right.
-letsEncrypt:
-  # email: none@example.com
-  environment: production
-  ingress:
-    # options: traefik, nginx
-    class: ""
-# If you are using certs signed by a private CA set to 'true' and set the 'tls-ca'
-# in the 'rancher-system' namespace. See the README.md for details
-privateCA: false
+# letsEncrypt:
+#   # email: none@example.com
+#   environment: production
+#   ingress:
+#     # options: traefik, nginx
+#     class: ""
+# # If you are using certs signed by a private CA set to 'true' and set the 'tls-ca'
+# # in the 'rancher-system' namespace. See the README.md for details
+# privateCA: false
 
 
 
