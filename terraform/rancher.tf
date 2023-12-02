@@ -26,3 +26,32 @@ resource "kubernetes_namespace" "bluewave_namespaces" {
 
   depends_on = [ module.eks_blueprints ]
 }
+
+
+resource "kubectl_manifest" "rancher_ingress" {
+  yaml_body = <<YAML
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bluewave-app-ingress
+  namespace: cattle-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /rancher
+        pathType: Prefix
+        backend:
+          service:
+            name: rancher
+            port:
+              number: 80
+    
+YAML
+
+  depends_on = [
+    helm_release.cert_manager
+  ]
+}
