@@ -87,3 +87,13 @@ resource "aws_iam_role_policy_attachment" "github_actions_ecr_policy_attachment"
   policy_arn = aws_iam_policy.github_actions_ecr_policy.arn
 }
 
+data "aws_iam_policy" "platform_team_eks_access" {
+  name = "${var.cluster_name}-PlatformTeamEKSAccess"
+  depends_on = [ module.eks_blueprints_kubernetes_addons ]
+}
+
+resource "aws_iam_policy_attachment" "attach_policy_to_role" {
+  name       = "attach-${var.product}-GitHubActionsRole-${var.environment}"
+  roles      = [aws_iam_role.github_actions.name]
+  policy_arn = data.aws_iam_policy.platform_team_eks_access.arn
+}

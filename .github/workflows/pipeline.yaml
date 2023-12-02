@@ -196,11 +196,12 @@ jobs:
 
       - name: Update Kubernetes Deployment Image
         run: |
-          ECR_REGISTRY='${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com'
-          IMAGE_TAG='${{ needs.build.outputs.IMAGE_TAG }}'
-          IMAGE_FULL_TAG=\"\${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:\${IMAGE_TAG}\"
-
+          ECR_REGISTRY="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          IMAGE_TAG="${{ needs.build.outputs.IMAGE_TAG }}"
+          IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
+      
           sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
+        
           
       - name: Deploy to Dev
         run: kubectl apply -f templates/k8s/ --namespace=dev
