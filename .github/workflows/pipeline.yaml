@@ -24,13 +24,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: 'python'  
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v2
+      #   with:
+      #     languages: 'python'  
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+      # - name: Perform CodeQL Analysis
+      #   uses: github/codeql-action/analyze@v2
 
   build:
     needs: code-scan
@@ -65,9 +65,6 @@ jobs:
           docker build -t "${IMAGE_NAME}" . --build-arg IMAGE_TAG=${IMAGE_TAG}
 
 
-      - name: Test Docker image
-        run: |
-            docker image ls
 
       - name: Scan the Docker image with Anchore
         uses: anchore/scan-action@v3

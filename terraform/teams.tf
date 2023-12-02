@@ -2,11 +2,8 @@ locals {
   platform_teams = {
     admin = {
       users = concat(
-        [data.aws_caller_identity.current.arn]
-        # ,
-        # [
-        #   "${your admin user arn here}"
-        # ]
+        [data.aws_caller_identity.current.arn],
+        [local.github_actions_assume_role_session_user_arn]
       )
     }
   }
@@ -26,12 +23,8 @@ locals {
         "services"        = "100"
       }
       users = concat(
-        [data.aws_caller_identity.current.arn]
-        # ,
-        # [
-        #   "${your admin user arn here}"
-          
-        # ]
+        [data.aws_caller_identity.current.arn],
+        [local.github_actions_assume_role_session_user_arn]
       )
     }
   }

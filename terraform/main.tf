@@ -340,7 +340,7 @@ module "eks_blueprints_kubernetes_addons" {
 data "aws_iam_role" "existing_role" {
   name = "${var.cluster_name}-aws-load-balancer-controller-sa-irsa"
 
-  depends_on = [ module.eks_blueprints ]
+  depends_on = [ module.eks_blueprints_kubernetes_addons ]
 }
 data "aws_iam_policy_document" "add_tags_policy_doc" {
   statement {

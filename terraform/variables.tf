@@ -16,12 +16,12 @@ variable "environment" {
   description = "The environment (e.g., dev, prod)"
   default     = "dev" 
 }
-
-# variable "instance_type" {
-#   type        = string
-#   description = "The instance type"
-#   default     = "r6a.large"
-# }
+variable "aws_account_id" {
+  type        = string
+  description = "The AWS account ID"
+  default     = "909632097186"
+  
+}
 
 variable "region" {
   type        = string
