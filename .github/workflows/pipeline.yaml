@@ -136,6 +136,7 @@ jobs:
           IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
       
           sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
+          sed -i 's|<ingress_path>|'"${{ env.name }}"'|g' templates/k8s/bluewave.yaml
         
           
       - name: Deploy to Dev
@@ -176,6 +177,7 @@ jobs:
           IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
       
           sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
+          sed -i 's|<ingress_path>|'"${{ env.name }}"'|g' templates/k8s/bluewave.yaml
         
           
       - name: Deploy to Staging 
@@ -217,6 +219,7 @@ jobs:
           IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
       
           sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
+          sed -i 's|<ingress_path>|'"${{ env.name }}"'|g' templates/k8s/bluewave.yaml
         
           
       - name: Deploy to Staging 

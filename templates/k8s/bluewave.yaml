@@ -45,7 +45,7 @@ spec:
   - host: '*.amazonaws.com'
     http:
       paths:
-      - path: /
+      - path: /<ingress_path>
         pathType: Prefix
         backend:
           service:

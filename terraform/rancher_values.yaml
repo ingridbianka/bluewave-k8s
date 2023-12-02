@@ -100,7 +100,7 @@ customLogos:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-bootstrapPassword: "bluewave123"
+bootstrapPassword: ""
 
 livenessProbe:
   initialDelaySeconds: 60
