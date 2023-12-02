@@ -101,78 +101,13 @@ jobs:
 
 
 
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write 
-  #     contents: read
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-  
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/bluewave-GitHubActionsRole-dev
-  #         role-session-name: github-actions_bluewave
-  #         aws-region: ${{ env.AWS_REGION }}
-  
-  #     - name: Retrieve SSH private key from AWS Secrets Manager
-  #       id: get-ssh-key
-  #       run: |
-  #         SSH_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id bluewave-private-key-dev --query SecretString --output text)
-  #         SSH_KEY_FILE=ssh_key.pem
-  #         echo "$SSH_PRIVATE_KEY" > $SSH_KEY_FILE
-  #         chmod 600 $SSH_KEY_FILE
-  #         echo "SSH_KEY_FILE=$SSH_KEY_FILE" >> $GITHUB_ENV
-  #         cat $SSH_KEY_FILE
-  #         ls -al 
-  #         pwd
-  
-  #     - name: Get EC2 Instance IP Address
-  #       id: get-ip
-  #       run: |
-  #         INSTANCE_IP=$(aws ec2 describe-instances \
-  #           --filters "Name=tag:Name,Values=bluewave-app-and-web-server-dev" \
-  #           --query "Reservations[*].Instances[*].PublicIpAddress" \
-  #           --output text)
-  #         echo "EC2_HOST=$INSTANCE_IP" >> $GITHUB_ENV
-  
-  #     - name: Deploy Docker image to EC2 instance
-  #       run: |
-  #         cat $SSH_KEY_FILE
-  #         ls -al 
-  #         pwd
-  #         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ${{ env.SSH_USERNAME }}@$EC2_HOST "
-            
-  #           ECR_REGISTRY='${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com'
-  #           IMAGE_TAG='${{ needs.build.outputs.IMAGE_TAG }}'
-  #           IMAGE_FULL_TAG=\"\${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:\${IMAGE_TAG}\"
-      
-  #           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin \$ECR_REGISTRY
-      
-  #           if [ \$(docker ps -aq -f name=^${{ env.APP_NAME }}\$) ]; then
-  #             docker stop ${{ env.APP_NAME }}
-  #             docker rm ${{ env.APP_NAME }}
-  #           fi
-      
-  #           pwd
-  #           ls -al
-      
-  #           docker run -d --name ${{ env.APP_NAME }} -p 8081:8080 \$IMAGE_FULL_TAG
-  #         "
-  #       env:
-  #         SSH_KEY_FILE: ${{ steps.get-ssh-key.outputs.SSH_KEY_FILE }}
-    
-  #     - name: Remove SSH private key
-  #       if: always()
-  #       run: rm -f $SSH_KEY_FILE
-  
-
   deploy-dev:
     needs: [code-scan, build]
     runs-on: ubuntu-latest
+    environment:
+      name: dev
+    env: 
+      name: dev
     permissions:
       id-token: write 
       contents: read
@@ -204,49 +139,85 @@ jobs:
         
           
       - name: Deploy to Dev
-        run: kubectl apply -f templates/k8s/ --namespace=dev
+        run: kubectl apply -f templates/k8s/ --namespace=${{ env.name }}
 
-  # deploy-staging:
-  #   needs: deploy-dev
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: staging
-  #   permissions:
-  #     id-token: write 
-  #     contents: read
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+  deploy-staging:
+    needs: [deploy-dev]
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    env: 
+      name: staging
+    permissions:
+      id-token: write 
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
   
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/bluewave-GitHubActionsRole-dev
-  #         role-session-name: github-actions_bluewave
-  #         aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/bluewave-GitHubActionsRole-dev
+          role-session-name: github-actions_bluewave
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+      - name: Update kubeconfig
+        run: |
+          aws eks --region ${{ env.AWS_REGION }} update-kubeconfig --name ${{ env.CLUSTER_NAME }} --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.CLUSTER_NAME }}-admin-access
 
-  #     - name: Deploy to Staging
-  #       run: kubectl apply -f k8s/staging/ --namespace=staging
-
-  # deploy-prod:
-  #   needs: deploy-staging
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: production
-  #   permissions:
-  #     id-token: write 
-  #     contents: read
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-  
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/bluewave-GitHubActionsRole-dev
-  #         role-session-name: github-actions_bluewave
-  #         aws-region: ${{ env.AWS_REGION }}
-  #     - name: Deploy to Prod
-  #       run: kubectl apply -f k8s/prod/ --namespace=prod
-
+      - name: Update Kubernetes Deployment Image
+        run: |
+          ECR_REGISTRY="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          IMAGE_TAG="${{ needs.build.outputs.IMAGE_TAG }}"
+          IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
+      
+          sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
         
+          
+      - name: Deploy to Staging 
+        run: kubectl apply -f templates/k8s/ --namespace=${{ env.name }}
+
+
+  deploy-production:
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+    env: 
+      name: prod
+    permissions:
+      id-token: write 
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+  
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/bluewave-GitHubActionsRole-dev
+          role-session-name: github-actions_bluewave
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+      - name: Update kubeconfig
+        run: |
+          aws eks --region ${{ env.AWS_REGION }} update-kubeconfig --name ${{ env.CLUSTER_NAME }} --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.CLUSTER_NAME }}-admin-access
+
+      - name: Update Kubernetes Deployment Image
+        run: |
+          ECR_REGISTRY="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          IMAGE_TAG="${{ needs.build.outputs.IMAGE_TAG }}"
+          IMAGE_FULL_TAG="${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}"
+      
+          sed -i 's|<image_full_tag>|'"$IMAGE_FULL_TAG"'|g' templates/k8s/bluewave.yaml
+        
+          
+      - name: Deploy to Staging 
+        run: kubectl apply -f templates/k8s/ --namespace=${{ env.name }}
