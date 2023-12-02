@@ -42,7 +42,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: bluewave.ledoux-bluewave.com
 spec:
   rules:
-  - host: *.amazonaws.com
+  - host: '*.amazonaws.com'
     http:
       paths:
       - path: /
