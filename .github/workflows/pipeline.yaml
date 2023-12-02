@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: 'us-east-1'
-  AWS_ACCOUNT_ID: 'xxxxxxxxxx'
+  AWS_ACCOUNT_ID: '909632097186'
   ECR_REPOSITORY: 'bluewave-app'
   APP_NAME: 'bluewave-app'
   CLUSTER_NAME: 'bluewave-eks-cluster'
@@ -196,7 +196,7 @@ jobs:
       - name: Update kubeconfig
         run: |
           aws eks --region ${{ env.AWS_REGION }} update-kubeconfig --name ${{ env.CLUSTER_NAME }} --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.CLUSTER_NAME }}-admin-access
-          
+
       - name: Update Kubernetes Deployment Image
         run: |
           ECR_REGISTRY='${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com'
