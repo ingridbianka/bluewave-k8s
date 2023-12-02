@@ -142,7 +142,7 @@ jobs:
         run: kubectl apply -f templates/k8s/ --namespace=${{ env.name }}
 
   deploy-staging:
-    needs: [deploy-dev]
+    needs: [build, deploy-dev]
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -183,7 +183,7 @@ jobs:
 
 
   deploy-production:
-    needs: [deploy-staging]
+    needs: [build, deploy-staging]
     runs-on: ubuntu-latest
     environment:
       name: prod
