@@ -1,0 +1,9 @@
+venv
+.idea
+/terraform/.*
+/terraform/terraform.tfstate
+/terraform/terraform.tfstate.backup
+/templates/.sh.tmpl
+kp.pem
+/ssh_key.pem
+```

@@ -1,0 +1,33 @@
+controller:
+
+  redirect-http-to-https: true
+  admissionWebhooks:
+    enabled: false
+
+  # kind: DaemonSet
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: "Local"
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+      service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
+      # service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=false,deletion_protection.enabled=true,access_logs.s3.enabled=true,access_logs.s3.bucket=acadia-multitenant-eks-access-log-bucket,access_logs.s3.prefix=acadia
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '60'
+      service.beta.kubernetes.io/aws-load-balancer-type: 'external'
+      service.beta.kubernetes.io/aws-load-balancer-scheme: 'internet-facing'
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: 'ip'
+      # service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+      service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
+      # service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true,deregistration_delay.timeout_seconds=120,stickiness.enabled=true,stickiness.type=source_ip,proxy_protocol_v2.enabled=true,deregistration_delay.connection_termination.enabled=true
+      service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: '40'
+
+
+
+    targetPorts:
+      http: http
+      https: https
+
+  
+
+
+

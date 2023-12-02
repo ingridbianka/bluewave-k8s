@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluewave Docker App</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .left-side {
+            width: 50%;
+            background-image: url('https://images.pexels.com/photos/6044145/pexels-photo-6044145.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-position: center;
+        }
+        .right-side {
+            width: 50%;
+            background: {{ color }};
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .app-name {
+            color: #e4e4e4;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px #000;
+            background: -webkit-linear-gradient(#007bff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .auth-prompt {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .auth-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #image-tag {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            padding: 5px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="left-side">
+        <!-- Static image here -->
+    </div>
+    <div class="right-side">
+        <div class="app-name">Bluewave Docker App</div>
+        <div class="auth-prompt">
+            <h2>Sign In or Sign Up</h2>
+            <p>Explore our features and services.</p>
+            <button class="auth-button">Sign In</button>
+            <button class="auth-button">Sign Up</button>
+        </div>
+        {% if contents %}
+            <textarea rows="10" cols="50">
+                {{ contents }}
+            </textarea>
+        {% endif %}
+        <div id="image-tag">
+            app version: {{ image_tag }}
+        </div>
+    </div>
+</body>
+</html>

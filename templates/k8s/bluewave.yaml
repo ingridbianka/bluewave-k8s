@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bluewave-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bluewave-app
+  template:
+    metadata:
+      labels:
+        app: bluewave-app
+    spec:
+      containers:
+      - name: bluewave-app
+        image: <image_full_tag>
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluewave-app-service
+  namespace: default
+spec:
+  selector:
+    app: bluewave-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bluewave-app-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: bluewave-app.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bluewave-app-service
+            port:
+              number: 80
