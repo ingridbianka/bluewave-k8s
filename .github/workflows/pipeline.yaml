@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: 'us-east-1'
-  AWS_ACCOUNT_ID: 'xxxxxxxxxxx'
+  AWS_ACCOUNT_ID: '601458261050'
   ECR_REPOSITORY: 'bluewave-app'
   APP_NAME: 'bluewave-app'
   CLUSTER_NAME: 'bluewave-eks-cluster'
