@@ -28,7 +28,7 @@ debug: false
 restrictedAdmin: false
 
 
-# hostname: rancher.observsmart.com
+hostname: rancher.ingrid-bluewave.com
 
 
 imagePullSecrets: []

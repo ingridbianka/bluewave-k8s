@@ -16,12 +16,12 @@ variable "environment" {
   description = "The environment (e.g., dev, prod)"
   default     = "dev" 
 }
-variable "aws_account_id" {
-  type        = string
-  description = "The AWS account ID"
-  default     = "xxxxxxxxxxxx"
+# variable "aws_account_id" {
+#   type        = string
+#   description = "The AWS account ID"
+#   default     = "601458261050"
   
-}
+# }
 
 variable "region" {
   type        = string
@@ -32,7 +32,7 @@ variable "region" {
 variable "github_username" {
   type        = string
   description = "Your GitHub username"
-  default     = "LedouxS"
+  default     = "ingridbianka"
 }
 
 variable "vpc_cidr" {
@@ -58,7 +58,7 @@ variable "cluster_version" {
 variable "cluster_domain" {
   type        = string
   description = "Domain name to use for the cluster's primary ingress controller"
-  default     = "bluewave.bluewave-ledoux.com"
+  default     = "bluewave.ingrid-bluewave.com"
 }
 
 variable "cluster_admin_arns" {
@@ -81,7 +81,7 @@ variable "default_allowed_cidr_list" {
 variable "contact_email" {
   type        = string
   description = "Email used whenever a contact email is required by a resource"
-  default     = "ledoux.songwa@gmail.com"
+  default     = "ingrid.songwa@gmail.com"
 }
 
 # variable "external_dns_hosted_zone_arns" {

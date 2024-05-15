@@ -12,6 +12,8 @@ locals {
 
 module "efs" {
   source = "terraform-aws-modules/efs/aws"
+  version = "v1.5.0"
+
 
   # File system
   name           = local.name

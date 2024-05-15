@@ -3,5 +3,9 @@ locals {
     region          = var.region
     repository_name = aws_ecr_repository.bluewave_app.registry_id
   })
-  github_actions_assume_role_session_user_arn = "arn:aws:sts::${var.aws_account_id}:assumed-role/${aws_iam_role.github_actions.name}/github-actions_bluewave"
+  # github_actions_assume_role_session_user_arn = "arn:aws:sts::${var.aws_account_id}:assumed-role/${aws_iam_role.github_actions.name}/github-actions_bluewave"
+  github_actions_assume_role_session_user_arn = "arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/${aws_iam_role.github_actions.name}/github-actions_bluewave"
 }
+
+
+
